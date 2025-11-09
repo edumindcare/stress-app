@@ -60,7 +60,13 @@
   .nav-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 16px}
   .brand{font-size:28px; font-weight:800}
   @media(min-width:900px){ .brand{font-size:30px} }
-  .nav-links{display:none; gap:26px; font-weight:700; font-size:15px}
+  .nav-links{
+  display:none;
+  gap:34px; /* tăng khoảng cách giữa các nút */
+  font-weight:700;
+  font-size:15px;
+  white-space:nowrap; /* ngăn chữ xuống hàng */
+	}
   .nav-links a{opacity:.9}
   .nav-links a:hover{opacity:1}
   @media(min-width:900px){ .nav-links{display:flex} }
@@ -157,6 +163,7 @@
         <a href="about.html">Phương pháp của Chúng tôi</a>
         <a href="games.html">Trò Chơi Giảm Căng Thẳng</a>
         <a href="survey.html">Khảo Sát</a>
+	<a href="predict.html">Kiểm tra Tâm lý</a>
         <a href="contact.html">Liên Hệ</a>
       </div>
     </nav>
