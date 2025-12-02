@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emotion Detection</title>
+    <script src="/scripttest.js"></script>
+</head>
+<body>
+    <h2>Emotion Detection Web</h2>
+
+    <h3>Upload Image</h3>
+    <input type="file" id="imageUpload">
+    <button onclick="uploadImage()">Predict</button>
+    <p>Result: <span id="result"></span></p>
+
+    <h3>Take Photo</h3>
+    <video id="video" width="300" autoplay></video>
+    <button onclick="takePhoto()">Capture & Predict</button>
+
+    <canvas id="canvas" width="300" height="300" style="display:none;"></canvas>
+
+</body>
+</html>
