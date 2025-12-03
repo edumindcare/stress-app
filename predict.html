@@ -1,87 +1,53 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Dự đoán cảm xúc khuôn mặt</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0"></script>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 30px; background: #f9fafc; }
-    img, video { max-width: 320px; margin: 10px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    button { margin: 5px; padding: 10px 15px; border: none; background: #0078ff; color: white; border-radius: 6px; cursor: pointer; }
-    button:hover { background: #005bcc; }
-    #result { font-size: 20px; margin-top: 20px; font-weight: bold; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Predict - Coming Soon</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background: #f5f5f5;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+}
+.container {
+text-align: center;
+background: white;
+padding: 40px;
+border-radius: 12px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+h1 {
+color: #333;
+margin-bottom: 10px;
+}
+p {
+color: #555;
+font-size: 18px;
+}
+.loader {
+margin: 20px auto;
+width: 50px;
+height: 50px;
+border: 6px solid #ddd;
+border-top-color: #3498db;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+}
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+</style>
 </head>
 <body>
-  <h2>🎭 Dự đoán cảm xúc khuôn mặt</h2>
-
-  <input type="file" id="file" accept="image/*"><br>
-  <video id="video" autoplay playsinline width="320" height="240"></video><br>
-  <button id="start">📷 Bật Camera</button>
-  <button id="snap">📸 Chụp ảnh</button>
-
-  <canvas id="canvas" width="48" height="48" style="display:none;"></canvas>
-  <h3 id="result">⏳ Đang tải model...</h3>
-
-  <script>
-    const labels = ["Angry","Disgust","Fear","Happy","Sad","Surprise","Neutral"];
-    let model;
-
-    // ⚡️ Load model — ưu tiên cache (IndexedDB)
-    async function loadModel() {
-      document.getElementById("result").innerText = "⏳ Đang tải model...";
-      try {
-        model = await tf.loadLayersModel("indexeddb://emotion-model");
-        document.getElementById("result").innerText = "✅ Model tải từ cache!";
-        console.log("Loaded from IndexedDB");
-      } catch {
-        model = await tf.loadLayersModel("model.json");
-        await model.save("indexeddb://emotion-model");
-        document.getElementById("result").innerText = "✅ Model tải từ file và đã lưu cache!";
-        console.log("Loaded from file & saved to IndexedDB");
-      }
-    }
-
-    async function predictImage(imgEl) {
-      const tensor = tf.browser.fromPixels(imgEl, 1)
-        .resizeNearestNeighbor([48,48])
-        .toFloat()
-        .div(255.0)
-        .expandDims(0);
-      const prediction = model.predict(tensor);
-      const data = await prediction.data();
-      const maxIndex = data.indexOf(Math.max(...data));
-      document.getElementById("result").innerText = `Cảm xúc: ${labels[maxIndex]} 😃`;
-    }
-
-    document.getElementById("file").onchange = e => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const img = new Image();
-      img.onload = () => predictImage(img);
-      img.src = URL.createObjectURL(file);
-    };
-
-    const video = document.getElementById("video");
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-
-    document.getElementById("start").onclick = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        if (!model) await loadModel();
-      } catch (err) {
-        alert("Không thể truy cập camera: " + err.message);
-      }
-    };
-
-    document.getElementById("snap").onclick = () => {
-      ctx.drawImage(video, 0, 0, 48, 48);
-      predictImage(canvas);
-    };
-
-    loadModel();
-  </script>
+<div class="container">
+<h1>Predict Feature</h1>
+<div class="loader"></div>
+<p>This feature is currently under development.<br>Please check back later!</p>
+</div>
 </body>
 </html>
