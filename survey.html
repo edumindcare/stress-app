@@ -168,7 +168,11 @@
              cursor:pointer; user-select:none; background:#fafafa; text-align:center;
              font-weight:800; white-space:nowrap}
   input[type=radio]{display:none}
-  input[type=radio]:checked + label{border-color:#cbd5e1; background:#eef2ff}
+  input[type=radio]:checked + label {
+    border-color:#facc15;      /* vàng – bạn có thể đổi */
+    background:#fff3c4;        /* vàng nhạt */
+    box-shadow:0 0 0 3px rgba(250,204,21,0.25); /* viền vàng mờ khi chọn */
+	}
 
   .subtle{color:var(--muted); font-size:14px}
 
