@@ -57,8 +57,8 @@
   /* ====== Header ====== */
   .navbar{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.95); backdrop-filter:saturate(160%) blur(8px); border-bottom:1px solid var(--border); transition:box-shadow .2s ease}
   .navbar.scrolled{box-shadow:0 6px 18px rgba(17,24,39,.06)}
-  .nav-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 250px}
-  .brand{font-size:28px; font-weight:800}
+  .nav-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 20px}
+  .brand{flex-shrink:0;}
   @media(min-width:900px){ .brand{font-size:30px} }
   .nav-links{
   display:none;
@@ -70,6 +70,83 @@
   .nav-links a{opacity:.9}
   .nav-links a:hover{opacity:1}
   @media(min-width:900px){ .nav-links{display:flex} }
+
+/* ===== Chatbot widget ===== */
+#chatbot-btn{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:#3b82f6;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+  z-index:9999;
+}
+
+#chatbot-box{
+  position:fixed;
+  right:22px;
+  bottom:92px;
+  width:340px;
+  max-height:480px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  z-index:9999;
+}
+
+#chatbot-header{
+  background:#3b82f6;
+  color:#fff;
+  padding:12px 14px;
+  font-weight:700;
+}
+
+#chatbot-messages{
+  flex:1;
+  padding:12px;
+  overflow-y:auto;
+  font-size:14px;
+}
+
+.chat-msg{margin-bottom:10px; line-height:1.4}
+.chat-user{font-weight:700}
+.chat-bot{color:#2563eb}
+
+#chatbot-input{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  border-top:1px solid #e5e7eb;
+}
+
+#chatbot-input input{
+  flex:1;
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid #d1d5db;
+}
+
+#chatbot-input button{
+  padding:8px 14px;
+  border-radius:8px;
+  border:none;
+  background:#3b82f6;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
 
   /* ====== Grid & Media ====== */
   .grid-2{display:grid; grid-template-columns:1fr; gap:28px; align-items:center}
@@ -461,5 +538,79 @@
     })();
 
 </script>
+
+<div id="chatbot-btn">💬</div>
+
+<div id="chatbot-box">
+  <div id="chatbot-header">
+    🤖 Edumindcare
+    <span>Hỗ trợ sức khỏe tinh thần</span>
+  </div>
+
+  <div id="chatbot-messages">
+    <div class="chat-msg chat-bot">
+      Xin chào 👋<br>
+      Tôi là trợ lý Edumindcare. Tôi có thể giúp gì cho bạn hôm nay?
+    </div>
+  </div>
+
+  <div id="chatbot-input">
+    <input id="chatbot-text" placeholder="Nhập câu hỏi của bạn…" />
+    <button onclick="sendChat()">Gửi</button>
+  </div>
+</div>
+<script>
+const API_URL = "https://stressbackend.onrender.com/chat";
+
+const btn = document.getElementById("chatbot-btn");
+const box = document.getElementById("chatbot-box");
+const input = document.getElementById("chatbot-text");
+const messages = document.getElementById("chatbot-messages");
+
+btn.onclick = () => {
+  box.style.display = box.style.display === "flex" ? "none" : "flex";
+};
+
+function addMsg(text, cls){
+  const div = document.createElement("div");
+  div.className = "chat-msg " + cls;
+  div.innerHTML = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+async function sendChat(){
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  addMsg(msg, "chat-user");
+  input.value = "";
+
+  const typing = document.createElement("div");
+  typing.className = "chat-msg chat-bot";
+  typing.innerText = "Đang nhập…";
+  messages.appendChild(typing);
+  messages.scrollTop = messages.scrollHeight;
+
+  try{
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await res.json();
+    typing.remove();
+    addMsg(data.reply, "chat-bot");
+  }catch(e){
+    typing.remove();
+    addMsg("⚠️ Không kết nối được máy chủ. Vui lòng thử lại.", "chat-bot");
+  }
+}
+
+input.addEventListener("keydown", e=>{
+  if(e.key === "Enter") sendChat();
+});
+</script>
+
 </body>
 </html>
